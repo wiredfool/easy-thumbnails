@@ -139,7 +139,7 @@ class ThumbnailFile(ImageFieldFile):
         if file:
             self.file = file
         self.thumbnail_options = thumbnail_options
-		self.is_transparent = False
+        self.is_transparent = False
 
     def _get_image(self):
         """
