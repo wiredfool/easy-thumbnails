@@ -139,6 +139,7 @@ class ThumbnailFile(ImageFieldFile):
         if file:
             self.file = file
         self.thumbnail_options = thumbnail_options
+		self.is_transparent = False
 
     def _get_image(self):
         """
@@ -318,7 +319,7 @@ class Thumbnailer(File):
         thumbnail = ThumbnailFile(
             filename, file=ContentFile(data), storage=self.thumbnail_storage,
             thumbnail_options=thumbnail_options)
-        thumbnail.image = thumbnail_image
+        thumbnail.is_transparent = utils.is_transparent(thumbnail_image)
         thumbnail._committed = False
 
         return thumbnail
@@ -414,7 +415,7 @@ class Thumbnailer(File):
             signals.thumbnail_created.send(sender=thumbnail)
             # Ensure the right thumbnail name is used based on the transparency
             # of the image.
-            filename = (utils.is_transparent(thumbnail.image) and
+            filename = (thumbnail.is_transparent and
                         transparent_name or opaque_name)
             self.get_thumbnail_cache(filename, create=True, update=True)
 
